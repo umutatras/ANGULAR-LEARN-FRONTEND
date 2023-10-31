@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-md-9">
+    <form
+      *ngIf="info == null"
+      (ngSubmit)="onSubmit()"
+      [formGroup]="articleForm"
+    >
+      <div class="form-container">
+        <mat-form-field>
+          <input
+            type="text"
+            placeholder="kategori seç"
+            formControlName="category"
+            matInput
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete
+            [displayWith]="displayCategoryName"
+            #auto="matAutocomplete"
+          >
+            <mat-error *ngIf="getControls.category.invalid">
+              {{
+                mmyvalidation.GetValidationMessages(
+                  getControls.category,
+                  "kategori alanı boş geçilemez"
+                )
+              }}
+            </mat-error>
+            <mat-option *ngFor="let item of categories" [value]="item">
+              {{ item.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            type="text"
+            formControlName="title"
+            matInput
+            placeholder="makale ismi"
+          />
+          <mat-error *ngIf="getControls.title.invalid">
+            {{
+              mmyvalidation.GetValidationMessages(
+                getControls.title,
+                "makale alanı boş geçilemez"
+              )
+            }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            type="text"
+            formControlName="contentSummary"
+            matInput
+            placeholder="makale içerik özet"
+          />
+          <mat-error *ngIf="getControls.contentSummary.invalid">
+            {{
+              mmyvalidation.GetValidationMessages(
+                getControls.contentSummary,
+                "özet alanı boş geçilemez"
+              )
+            }}
+          </mat-error>
+        </mat-form-field>
+        <div style="border: 1px solid black" class="mb-2">
+          <ckeditor
+            (ready)="onReady($event)"
+            formControlName="contentMain"
+            [editor]="Editor"
+          ></ckeditor>
+        </div>
+
+        <button [disabled]="loading" mat-raised-button color="primary">
+          makale ekle
+        </button>
+      </div>
+    </form>
+    <div class="alert alert-danger mt-3" *ngIf="info != null">
+      {{ info }}
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-primary">
+      <div class="card-header">Makale Resim</div>
+      <div class="card-body">
+        <img
+          [src]="picture || 'assets/articleempty.png'"
+          alt=""
+          class="img-thumbnail"
+        />
+      </div>
+    </div>
+    <div class="card-footer">
+      <input
+        (change)="upload($event)"
+        type="file"
+        class="form-control"
+        name="image"
+      />
+    </div>
+  </div>
+</div>
